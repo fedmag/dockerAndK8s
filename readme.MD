@@ -76,10 +76,10 @@ ENTRYPOINT ["node", "./app.js"]
 - `ENTRYPOINT` -> what to run when the container is started
 
 ## Volumes
-Usually date are not stored in containers as they are saved.  
-Nonetheless, it is possible to do so using volumes, which is mapped to a folder in the filesystem. Basically a logical folder in the container which maps an actual folder on the host FS.
+Usually date are not stored in containers as they are not saved.  
+Nonetheless, if we want data to persist, it is possible to do so using volumes, which is mapped to a folder in the filesystem. Basically a logical folder in the container which maps an actual folder on the host FS.
 
-- `docker create volume [volumeName]` -> creates a new volume
+- `docker volume create [volumeName]` -> creates a new volume
 - `docker volume ls` -> list the volumes
 - `docker volume inspect [volumeName]` -> diplay volume info
 - `docker volume rm [volumeName]` -> deletes a volume
@@ -91,9 +91,13 @@ Example:
 docker volume create myvol
 
 # run a container with that volume attached
-docker run -d --name devtest -v myvol:/[hostFolder] nginx:latest
+docker run -d --name devtest -v myvol:/[mappedFolderInTheContainer] nginx:latest
+docker run -d --name devtest -v myvol:/app nginx:latest
+
 
 # for testing purposes we can create and map temp folders in the contaier rather than volumes
-docker run -d --name devtest -v d:/test:/[hostFolder] nginx:latest
+docker run -d --name devtest -v d:/test:/[mappedFolderInTheContainer] nginx:latest
 ```
+
+In order to remove a volume is necessary to stop and remove from memory all containers using it. 
 
