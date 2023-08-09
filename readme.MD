@@ -83,4 +83,17 @@ Nonetheless, it is possible to do so using volumes, which is mapped to a folder 
 - `docker volume ls` -> list the volumes
 - `docker volume inspect [volumeName]` -> diplay volume info
 - `docker volume rm [volumeName]` -> deletes a volume
-- `docker volume prune` -> deletes all NOT MOUNTED volumes
+- `docker volume prune` -> deletes all NOT MOUNTED volumes  
+- 
+Example:
+```
+# create the volume
+docker volume create myvol
+
+# run a container with that volume attached
+docker run -d --name devtest -v myvol:/[hostFolder] nginx:latest
+
+# for testing purposes we can create and map temp folders in the contaier rather than volumes
+docker run -d --name devtest -v d:/test:/[hostFolder] nginx:latest
+```
+
