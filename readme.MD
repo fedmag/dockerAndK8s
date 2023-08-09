@@ -1,9 +1,9 @@
-The information is taken from: https://www.youtube.com/watch?v=kTp5xUtcalw&t=1724s&ab_channel=freeCodeCamp.org
+The information is taken from: [Docker and k8s course.](https://www.youtube.com/watch?v=kTp5xUtcalw&t=1724s&ab_channel=freeCodeCamp.org)
 # DOCKER 
 ## Basic concept 
 The images run within a container. The container can be thought as a very lightweight VM. The main difference with an actual VM is that it shares HW and Kernel with the host machine rather than virtualizing it as in an actual VM. \
 Within this container the images descibe what is running: os, program installed, etc.
-![vmVSContainer](images\containerVSvm.png)
+![vmVSContainer](images/containerVSvm.png)
 
 ### Image vs container
 ```
@@ -74,3 +74,13 @@ ENTRYPOINT ["node", "./app.js"]
 - `WORKDIR` -> define the working directory
 - `EXPOSE` -> metadata, tell the container to listen on this port
 - `ENTRYPOINT` -> what to run when the container is started
+
+## Volumes
+Usually date are not stored in containers as they are saved.  
+Nonetheless, it is possible to do so using volumes, which is mapped to a folder in the filesystem. Basically a logical folder in the container which maps an actual folder on the host FS.
+
+- `docker create volume [volumeName]` -> creates a new volume
+- `docker volume ls` -> list the volumes
+- `docker volume inspect [volumeName]` -> diplay volume info
+- `docker volume rm [volumeName]` -> deletes a volume
+- `docker volume prune` -> deletes all NOT MOUNTED volumes
