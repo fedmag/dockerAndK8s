@@ -1,6 +1,6 @@
 The information is taken from: [Docker and k8s course.](https://www.youtube.com/watch?v=kTp5xUtcalw&t=1724s&ab_channel=freeCodeCamp.org)
-# DOCKER 
-## Basic concept 
+# Docker
+## Basic concepts
 The images run within a container. The container can be thought as a very lightweight VM. The main difference with an actual VM is that it shares HW and Kernel with the host machine rather than virtualizing it as in an actual VM. \
 Within this container the images descibe what is running: os, program installed, etc.
 ![vmVSContainer](images/containerVSvm.png)
@@ -332,3 +332,72 @@ docker push fedmag/my_image:latest
 # pull the image
 docker pull fedmag/my_image:latest
 ```
+
+# Kubernetes (K8s)
+## Basic concepts
+k8s is a container orchestration tool.  
+MORE TO ADD
+
+The k8s apiserver is running on the master node and exposes REST APIs that is the only point of communication for k8s clusters.
+
+The desired state is expressed through a YAML file. Such desired state is sent to the cluster thorugh the CLI (kubectl), which uses the aforementioned REST APIs. Other applications such as dashboards communicates through the same REST APIs.
+
+The `.kube` folder (C:/Users/[userName]/.kube) stores the information used by kubectl (such as the config and all the clusters information).
+
+## Context
+A group of access parameters to a k8s cluster. It contains:
+- cluster name
+- a user
+- a namespace
+
+The current context is the k8s cluster against which the kubectl commands will be executed.
+
+### Commands
+
+- `kubectl config current-context` -> get the current context
+- `kubectl config get-contexts` -> list all context
+- `kubectl config use-context [contextName]` -> set the current context
+- `kubectl config delete-context [contextName]` -> delete a context from the config file
+- `kubectl config rename-context [oldName] [newName]` -> rename context
+
+## Declarative vs Imperative 
+There are two ways of creating resources in k8s:
+1. <strong>Imperative:</strong> using kubectl commands, issue a series of commands to create resources:
+   ```
+   kubectl run mynginx --image=nginx --port=80
+   kubectl create deploy mynginx --image=nginx --port=80 --replicas=3
+   kubectl create service nodeport myservice --targetPort=8080
+   kubectl delete pod nginx
+   ```
+2. <strong>Declarative:</strong> using kubectl and YAML manifests that define the resources that are needed. The advantage is that this is reproducible, can be saved in source-control and can be parsed and modified:
+   ```
+    apiVersion: v1
+    kind: Pod 
+    metadata: 
+      name: myapp-pod 
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+      containers:
+      - name: nginx-container
+      image: nginx  
+   ```
+    then kubectl is used to send the YAML file to the k8s cluster: `kubectl create -f [yamlFile]`
+
+## Namespace
+Allows to group resources (ex: dev, test, prod). Namespaces are kind of logical folders in which resources are grouped together.
+
+k8s creates a default namespace. 
+
+Objects in one namespace can access objects in a different one: `objectName.PROD.svc.cluster`.
+
+Deleting a namespace will delete all its child objects.
+
+![namespace](images/namespace.png)
+### Commands
+- `kubectl get namespace/ns` -> lists all namespaces in a cluster.
+- `kubectl config  set-context --current --namespace=[nameSpace]` -> set the current context to use a namespace
+- `kubectl create ns [nameSpace]` -> create a namespace 
+- `kubectl delete ns [nameSpace]` -> delete a namespace
+- `kubectl get pods --all-namespaces` -> list all pods in all namespaces
