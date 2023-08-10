@@ -84,7 +84,7 @@ Nonetheless, if we want data to persist, it is possible to do so using volumes, 
 - `docker volume inspect [volumeName]` -> diplay volume info
 - `docker volume rm [volumeName]` -> deletes a volume
 - `docker volume prune` -> deletes all NOT MOUNTED volumes  
-- 
+  
 Example:
 ```
 # create the volume
@@ -101,3 +101,55 @@ docker run -d --name devtest -v d:/test:/[mappedFolderInTheContainer] nginx:late
 
 In order to remove a volume is necessary to stop and remove from memory all containers using it. 
 
+## Docker Compose
+Docker compose allows to define a single file to run multi-containers applications. It is defined using YAML files and run using docker CLI with the compose plugin.
+
+`docker-compose ...` is compose v1 and was replaced in 2022 by v2 that now uses `docker compose ...`. All v1 commands are working as expected.
+
+Example of a Docker compose file:
+```
+version: '3.9'
+
+services: 
+  webapi1:
+    image: academy.azurecr.io/webapi1
+    ports:
+      - '8081:80'
+    restart: always
+  
+  webapi2:
+    image: academy.azurecr.io/webapi2
+    ports:
+      - '8082:80'
+    restart: always
+  
+  apigateway:
+    image: academy.azurecr.io/gateway
+    ports:
+      - '80:80'
+    restart: always
+```
+This docker comose file defines 3 containers.  
+The names are used within each container to reference other containers. For each of them there is the image location, the internal and external port. 
+
+Docker compose is perfect for small orcherstration. When k8s would be overkill or when developing and testing.
+
+### Docker compose commands
+- `docker compose build` -> build the images
+  - `... -f [fileLocation]`-> to specify the docker compose file location
+- `docker compose start` -> start the containers
+- `docker compose stop` -> stop the containers
+- `docker compose up` -> build and start
+  - `... -d` -> run in detach mode (in bg)
+- `docker compose ps` -> list what's running
+- `docker compose rm` -> remove from memory
+- `docker compose down` -> stop and remove
+- `docker compose logs` -> get logs
+- `docker compose exec [container] bash` -> open a session inside a container
+
+### new (only v2) commands
+- `docker compose --project-name (or -p) [projectName] up` -> run an instance as project
+- `docker compose ls` -> list running projects
+- `docker compose cp [containerId]:[srcPath] [destPath]` -> copy files FROM the container
+- `docker compose cp [destPath] [containerId]:[srcPath]` -> copy files TO the container
+  
