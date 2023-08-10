@@ -397,7 +397,7 @@ Deleting a namespace will delete all its child objects.
 ![namespace](images/namespace.png)
 ### Commands
 - `kubectl get namespace/ns` -> lists all namespaces in a cluster.
-- `kubectl config  set-context --current --namespace=[nameSpace]` -> set the current context to use a namespace
+- `kubectl config  set-context --current --namespace=[nameSpace]` -> set the current context to a specific namespace
 - `kubectl create ns [nameSpace]` -> create a namespace 
 - `kubectl delete ns [nameSpace]` -> delete a namespace
 - `kubectl get pods --all-namespaces` -> list all pods in all namespaces
