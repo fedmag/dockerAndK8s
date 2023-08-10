@@ -145,6 +145,7 @@ Docker compose is perfect for small orcherstration. When k8s would be overkill o
 - `docker compose rm` -> remove from memory
 - `docker compose down` -> stop and remove
 - `docker compose logs` -> get logs
+- `... -f [serviceName]` -> get logs for that specific service
 - `docker compose exec [container] bash` -> open a session inside a container
 
 ### new (only v2) commands
