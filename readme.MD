@@ -104,6 +104,8 @@ In order to remove a volume is necessary to stop and remove from memory all cont
 ## Docker Compose
 Docker compose allows to define a single file to run multi-containers applications. It is defined using YAML files and run using docker CLI with the compose plugin.
 
+The docker compose file must be named `docker-compose.yaml`.
+
 `docker-compose ...` is compose v1 and was replaced in 2022 by v2 that now uses `docker compose ...`. All v1 commands are working as expected.
 
 Example of a Docker compose file:
@@ -148,9 +150,163 @@ Docker compose is perfect for small orcherstration. When k8s would be overkill o
 - `... -f [serviceName]` -> get logs for that specific service
 - `docker compose exec [container] bash` -> open a session inside a container
 
-### new (only v2) commands
+### New commands (only v2)
 - `docker compose --project-name (or -p) [projectName] up` -> run an instance as project
 - `docker compose ls` -> list running projects
 - `docker compose cp [containerId]:[srcPath] [destPath]` -> copy files FROM the container
 - `docker compose cp [destPath] [containerId]:[srcPath]` -> copy files TO the container
-  
+
+### Additional parameters
+#### Resources
+The amount of resource used by each service can be defined in the docker-compose.yaml.
+Ex:
+```
+service:
+  redis:
+    image: redis:alpine
+    deploy:
+      resources:
+        limits: # massimum allocation possible
+          cpus: '0.50'
+          memory: 150M
+        reservations: # initial allocation
+          cpus: '0.25'
+          memory: 20M
+```
+
+#### Environment variables
+To set a varialbe env. that will be injected in the running instance the key-value pairs  must be set:
+```
+service:
+  web:
+    image: nginx:alpine
+    environment:
+      - DEBUG=1
+      - FOO=BAR
+```
+This value can be overwritten through the command line with the -e parameter:
+`docker compose up -d -e DEBUG=0`
+
+Environment variables can be placed in a file `.env` located in the same folder as the docker-compose.yaml:
+```
+POSTGRES_VERSION=14.3
+```
+and then it can be referenced from the docker compose file:
+```
+services:
+  db:
+    image: "postgres:${POSTGRES_VERSION}
+```
+
+#### Networking
+By default all containers specified in a compose file will see each other using their service names. 
+For example: 
+```
+service:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+  db: 
+    image: postgres
+    ports:
+      - "5432" # not mapping host port for this container, i.e. only accessible via 'web'
+```
+![networking](images/networking.png)
+This means that the web container can communicate with the db container using his service name (db) as the host name and viceversa.
+
+This means that the db is not accessible from the outside, but only through the 'web' container. 
+
+If the application is more complex, is also possible to restirct who can see who by configuring different networks.
+
+Example:
+```
+service:
+  proxy:
+    image: nginx:alpine
+    networks:
+      - frontend
+
+  app:
+    image: myapp
+    networks:
+      - frontend
+      - backend
+
+  db: 
+    image: postgres
+    networks:
+      - backend
+
+networks:
+  - frontend
+  - backend
+```
+![complex networking](images/complexNetworking.png)
+
+In this case 'app' will be able to communicate with both 'db' and 'proxy' because 'app' shares the network with them, but 'proxy' won't be able to "see" or communicate with 'db' as they belong to different networks.
+
+#### Dependency
+It is possible to establish the execution order of the different services (container). For example, it is important to have the DB in place before the application starts:
+```
+services:
+  app:
+    image: myapp
+    depends_on:
+      - db
+  db: 
+    image: postgres
+    networks:
+      - backend
+```
+
+#### Volumes
+It is possible to declare volumes that can be used by all services present in the compose file:
+```
+services:
+  app:
+    image: myapp
+    depends_on:
+      - db
+  db: 
+    image: postgres
+    networks:
+      - backend
+    volumes:
+      # to actually use the volume, it must be mapped to a local folder in the container
+      - db-data:/etc/data 
+
+volumes:
+  - db-data:
+```
+Once the volumes are declared, when used by a service the mapping to the logic folder within the service must be created:
+
+`[volumeName]:[logicalFolder]`
+it can also be specified the type of permission on the volume:  
+`[volumeName]:[logicalFolder]:[ro/rw]` -> ReadOnly or ReadWrite
+
+Volumes can be also defined at service level. In this case they are NOT shared among services:
+```
+services:
+  db: 
+    image: postgres
+    networks:
+      - backend
+    volumes:
+      # to actually use the volume, it must be mapped to a local folder in 
+      - ./db:/etc/data 
+```
+
+#### Restart policy
+If not specified, the containers are not restarted under any circumstances.
+Possible values:
+`always` -> always restart the container until its removal
+`on-failure` -> restart if the exit code indicates an error
+`unless-stopped` -> always restart unless the contaier it's stopped or removed
+
+```
+services:
+  db: 
+    image: postgres
+    restart: always 
+```
