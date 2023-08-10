@@ -310,3 +310,25 @@ services:
     image: postgres
     restart: always 
 ```
+
+## Container Registry
+It is a central repository for images. Once the image is built locally, the image is pushed and stored to the repository. 
+It can be private or public. 
+
+The default is `hub.docker.com`, but each cloud vendor (AWS, Azure, GCP) offers its own repository as service.
+
+When pushing an image to docker hub the image must be tagged and prefixed with the repository name.  
+Workflow:
+```
+# login into docker hub
+docker login
+
+# tag the built image -> [repositoryName]/[imageToTag]:[tag]
+docker tag my_image fedmag/my_image:latest 
+
+# push the image
+docker push fedmag/my_image:latest
+
+# pull the image
+docker pull fedmag/my_image:latest
+```
