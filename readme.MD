@@ -498,8 +498,10 @@ specs:
 
 #### Commands
 
-- `kubectl create -f [podDefinition.yml]` -> create a pod using a file (declarative way)
+- `kubectl create -f [podDefinition.yml]` -> create a pod using a file (imperative object way)
 - `kubectl run [podName] --image= busybox -- /bin/sh -c "sleep 3600` -> run a pod without yaml file (imparative way) 
+- `kubectl apply -f [podDefinition].yaml` -> declarative way
+  - more info: [object management](https://kubernetes.io/docs/concepts/overview/working-with-objects/object-management/)
 - `kubectl get pods` -> list running pods
   - `... -o wide` -> get more info on running pods
 - `kubectl describe pod [podName]` -> show pod info
