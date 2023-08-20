@@ -401,3 +401,47 @@ Deleting a namespace will delete all its child objects.
 - `kubectl create ns [nameSpace]` -> create a namespace 
 - `kubectl delete ns [nameSpace]` -> delete a namespace
 - `kubectl get pods --all-namespaces` -> list all pods in all namespaces
+
+## Nodes
+![namespace](images/nodes.png)
+Nodes are physical or virtual VMs. A group of nodes forms a <strong>cluster</strong>.
+Among all the nodes there is one that control the others, the <storng>master node</strong>.
+
+### Master Node
+The master node (or control plane) contains the master components, a collection of k8s elements that are needed for the overall orchestration and functioning of k8s:
+
+- etcd: key-value data store. Stores the cluster state. Not inteded to be used as DB by applications. Inside k8s this is the single source of truth.
+- kube-apiserver: the only component talking to etcd. It exposes a REST interface and tools like k8s cli communicate through it. All the clients interact with it, never directly with the data store.
+- kube-control-manager: the controller of controllers. It runs the other k8s controllers.
+- cloud-control-manager: interact with the cloud providers controlleers. 
+    - Node: for checking the cloud provider to determine is a node has been deleted in the cloud after it stops respondeing
+    - Route: for setting up routes in the underlying cloud infrastracture
+    - Service: for creating, updating and deleting cloud provider load balancers
+    - Volume: for creating, attaching and mounting volumes. Also interacts with the cloud provider to orchestrates volumes.
+- kube-scheduler: watches for newly created pods that have no nodes assigned and selects a node to run into such pods. For the scheduling decision the following is taken into accout:
+  - Individual and collective resource requirements
+  - HW/SW constraints
+  - Affinity and anty-affinity specifications
+  - Data locality
+- Addons: there are many addons that can be installed on the master node to enhance the capabilities of k8s. For example:
+  - DNS
+  - Web UI (dashboard)
+  - Cluster-level logging
+  - Container resource monitoring
+  
+ Usually no applications are run on the master node.
+
+ ### Worker Node
+ When a worker node is added to the cluster a few k8s services are installed by default:
+
+ - container runtime: runtimet to run containers. Must implement the Kubernetes Container Runtimer Interface (CRI).
+ - kubelet: manages the pod life cycle. Ensures that the containers described in the Pod specs are running and healty.
+ - kube-proxy: network proxy that manages network rules on the node. All network traffic goes through kube-proxy.
+
+These services are needed to run tasks and are managed by master components on the master node.
+
+#### Node pool
+A group of virtual machines, all with the same size.  
+A cluster can have many node pools:
+- these pools can host different sizes of VMs
+- each pool can be autoscaled independently from the other pools.
