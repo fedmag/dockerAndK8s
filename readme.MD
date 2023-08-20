@@ -469,3 +469,41 @@ The scaling happens by adding more pods, not more containers within the pod.
 - Unknown -> communication issues with the pod.
 - CrashLoopBackOff -> started, crashed, started again and then crashed again.
 
+### Define and run pods
+To define a pod a YAML file is used. The type of resource (`Pod`) in this case is defined in the value kind:
+
+```
+apiVersion: v1
+kind: Pod #-> object type
+metadata: 
+  name: myapp-pod
+  labels: #-> used to identify, describe and group related sets of objs/resources
+    app: myapp
+    type: front-end
+specs:
+  containers:
+  - name: nginx-container
+    image: nginx #-> image that is going to be pulled by docker hub
+    ports:
+    - containerPort: 80 #-> port the container will listen on
+      name: http
+      protocol: TCP
+    env: #-> set env variables. Not the best idea to set them here tho
+    - name: DBCON
+      value: connectionstring
+    # specify commands to run when the container starts. Equiv. to Docker ENTRYPOINT
+    command: ["/bin/sh", "-c"]
+    args: ["echo ${DBCON}"]
+```
+
+#### Commands
+
+- `kubectl create -f [podDefinition.yml]` -> create a pod using a file (declarative way)
+- `kubectl run [podName] --image= busybox -- /bin/sh -c "sleep 3600` -> run a pod without yaml file (imparative way) 
+- `kubectl get pods` -> list running pods
+  - `... -o wide` -> get more info on running pods
+- `kubectl describe pod [podName]` -> show pod info
+- `kubectl get pod [podName] -o yaml > [fileName].yaml` -> extract the pod definition in YAML and save it in a file 
+- `kubectl exec -it [podName] -- sh` -> interactive mode
+- `kubectl delete -f [podDefinition.yml]` -> delete pod
+- `kubectl delete pod [podName]` -> delete pod using pod's name
