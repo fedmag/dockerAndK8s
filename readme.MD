@@ -507,3 +507,13 @@ specs:
 - `kubectl exec -it [podName] -- sh` -> interactive mode
 - `kubectl delete -f [podDefinition.yml]` -> delete pod
 - `kubectl delete pod [podName]` -> delete pod using pod's name
+
+### Init container
+If the application has some dependency (files, apis, validate that a DB is up and running) we can tell the pod to initialize a contaier (the so called `init container`) before the application contaier runs. When the init container is initialized and completed, the app container will start.
+
+The main advantage is that we can separate the application container (main logic) from its dependecies (infrastructure code).
+
+Each init contaier always run to completion. There can be more than one, but each must complete successfully before the next one starts.
+
+As example, here we have 2 init containers that check that 2 services are up and running:
+![initContainers](images/initContainers.png)
