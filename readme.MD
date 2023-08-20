@@ -445,3 +445,27 @@ A group of virtual machines, all with the same size.
 A cluster can have many node pools:
 - these pools can host different sizes of VMs
 - each pool can be autoscaled independently from the other pools.
+
+## Pods
+
+Atomic (smallest) unit of work of k8s.  
+Encapsulates an application's container.  
+Represents a unit of deployment.
+
+Pods can run one or more containers -> within a pod containers share IP address and volume. -> they communicate with each other using `localhost`.
+
+Pods are ephemeral (pods are not updated, but replaced with an updated version) and deploying one is an atomic operation (it succeeds or not). If a pod fails, it is replaced with a new one with a new IP address.
+
+The scaling happens by adding more pods, not more containers within the pod.
+![pods](images/pods.png)
+
+![pod](images/pod.png)
+
+### Pod state
+- Pending -> acccepted but not yet created. For example if there are not enough resources.
+- Running -> all good.
+- Succeeded -> exited with status 0.
+- Failed -> all containers exdit and at least one exited with a non-zero status.
+- Unknown -> communication issues with the pod.
+- CrashLoopBackOff -> started, crashed, started again and then crashed again.
+
