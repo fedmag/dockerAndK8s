@@ -1,5 +1,10 @@
 The information is taken from: [Docker and k8s course.](https://www.youtube.com/watch?v=kTp5xUtcalw&t=1724s&ab_channel=freeCodeCamp.org)
 # Docker
+
+## CheatSheet
+Taken from [devOpsCycle](https://devopscycle.com/blog/the-ultimate-docker-cheat-sheet/)
+![dockerCheatSheet](images/the-ultimate-docker-cheat-sheet-4.png)
+
 ## Basic concepts
 The images run within a container. The container can be thought as a very lightweight VM. The main difference with an actual VM is that it shares HW and Kernel with the host machine rather than virtualizing it as in an actual VM. \
 Within this container the images descibe what is running: os, program installed, etc.
