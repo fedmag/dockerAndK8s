@@ -80,6 +80,11 @@ ENTRYPOINT ["node", "./app.js"]
 - `EXPOSE` -> metadata, tell the container to listen on this port
 - `ENTRYPOINT` -> what to run when the container is started
 
+### Entrypoint VS CMD
+Both commands do a very similar thing, they define the commands that must be executed when a container is started. The main difference is that CMD instruction can be overwritten using the CLI and the values inserted as CLI argument, REPLACE the values in the Dockerfile.
+
+On the other hand, if ENTRYPOINT is used it is not possible to overwrite the values, and whatever is is added as command line argument gets APPENDED!
+
 ## Volumes
 Usually date are not stored in containers as they are not saved.  
 Nonetheless, if we want data to persist, it is possible to do so using volumes, which is mapped to a folder in the filesystem. Basically a logical folder in the container which maps an actual folder on the host FS.
@@ -107,7 +112,13 @@ docker run -d --name devtest -v d:/test:/[mappedFolderInTheContainer] nginx:late
 In order to remove a volume is necessary to stop and remove from memory all containers using it. 
 
 ## Docker Compose
+## Dockerfile vs Docker compose
+Docker file is a file collecting cinstruction on how to build an image and what to do when the container is started. 
+On the other hand, docker compose is a tool to orchestrate MULTIPLE containers. That is, in theory, you coould have multiple Dockerfiles that are then glued together by Docker compose.
+
+## In general
 Docker compose allows to define a single file to run multi-containers applications. It is defined using YAML files and run using docker CLI with the compose plugin.
+
 
 The docker compose file must be named `docker-compose.yaml`.
 
