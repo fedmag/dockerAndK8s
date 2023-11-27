@@ -61,7 +61,7 @@ example complete command: docker run --publish 0.0.0.0:8080:80 --name webserver 
   - `... -f [fileName]` -> build an image using a Dockerfile located in ANOTHER folder
 - `docker tag [imageName] [name:tag]` -> tag an existing image (tag is usually a version number)
 
-### DOCKERFILE
+## DOCKERFILE
 Is a text file containing instructions (steps) on how to build an image.
 Example of a dockerfile (create a Node.js app):
 ```
@@ -118,6 +118,8 @@ On the other hand, docker compose is a tool to orchestrate MULTIPLE containers. 
 
 ## In general
 Docker compose allows to define a single file to run multi-containers applications. It is defined using YAML files and run using docker CLI with the compose plugin.
+
+Tutorial: `https://training.play-with-docker.com/microservice-orchestration/`
 
 
 The docker compose file must be named `docker-compose.yaml`.
