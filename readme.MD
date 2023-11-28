@@ -121,6 +121,12 @@ In order to remove a volume is necessary to stop and remove from memory all cont
 Docker file is a file collecting cinstruction on how to build an image and what to do when the container is started. 
 On the other hand, docker compose is a tool to orchestrate MULTIPLE containers. That is, in theory, you coould have multiple Dockerfiles that are then glued together by Docker compose.
 
+
+In a general case one would have a project which is divided in different folders, one folder per service. Each folder contains a Dockerfile that builds that service.  
+In the outermost folder than there is a docker-compose.yml that orchestrate all the different Dockerfiles:
+![tree](images/tree.png)
+
+
 ## In general
 Docker compose allows to define a single file to run multi-containers applications. It is defined using YAML files and run using docker CLI with the compose plugin.
 
