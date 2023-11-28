@@ -112,6 +112,11 @@ docker run -d --name devtest -v d:/test:/[mappedFolderInTheContainer] nginx:late
 In order to remove a volume is necessary to stop and remove from memory all containers using it. 
 
 ## Docker Compose
+### Cheatsheets 
+[devHints](https://devhints.io/docker-compose)  
+[Dockerlabs](https://dockerlabs.collabnix.com/intermediate/docker-compose/compose-cheatsheet.html)
+![cheatSheet](images/docker_compose.png)
+
 ## Dockerfile vs Docker compose
 Docker file is a file collecting cinstruction on how to build an image and what to do when the container is started. 
 On the other hand, docker compose is a tool to orchestrate MULTIPLE containers. That is, in theory, you coould have multiple Dockerfiles that are then glued together by Docker compose.
