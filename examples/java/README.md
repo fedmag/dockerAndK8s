@@ -20,3 +20,18 @@ VOLUME /tmp
 COPY build/libs/*.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
 ```
+
+For example, in the subfolder docker-be a simple springBoot application is created.
+In order to build the image one would run:
+`docker image build -t springboot .`
+
+and then to run the container:
+`docker run -it -d -p 8081:8080 springboot`
+
+browsing to: 
+`http://localhost:8081/echo/uppercase?text=test`
+
+will show the text: TEST which is coming from the container.
+
+Inspecting the logs:
+`docker logs <container-name>` confirms it.
