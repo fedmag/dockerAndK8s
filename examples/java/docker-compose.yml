@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  api:
+    image: be:springBoot
+    build: ./docker-be
+    ports:
+      - "8081:8081"
+
+  web:
+    image: fe:html
+    build: ./docker-fe
+    ports:
+      - "80:80"

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPPERCASE SERVICE</title>
+</head>
+<body>
+    <label for="textInput">Enter Text:</label>
+    <input type="text" id="textInput" placeholder="Type something...">
+    <button onclick="performGetRequest()">Send GET Request</button>
+    <p id="response">This should be changed</p>
+
+    <script>
+        async function performGetRequest() {
+            // Get the value from the text field
+            var inputValue = document.getElementById("textInput").value;
+
+            try {
+                // Make the GET request using fetch
+                let requestUrl = `http://localhost:8081/echo/uppercase?text=${inputValue}`
+                console.log(requestUrl)
+                const response = await fetch(requestUrl);
+
+                if (response.ok) {
+                    // If the response is successful, parse and display it
+                    const responseData = await response.text();
+                    document.getElementById("response").innerText = responseData;
+                } else {
+                    // If the response is not successful, display an error message
+                    document.getElementById("response").innerText = `Response not successful, error: ${response.statusText}`;
+                }
+            } catch (error) {
+                // If an error occurs during the fetch, display an error message
+                document.getElementById("response").innerText = `Error requesting resource: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
