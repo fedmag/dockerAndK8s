@@ -12,7 +12,7 @@ COPY . .
 RUN gradle bootJar
 
 # Package stage
-FROM openjdk:latest
+FROM amazoncorretto:17
 ENV JAR_NAME=docker-be-0.0.1-SNAPSHOT.jar
 ENV APP_HOME=/usr/app/
 ENV BE_PORT=8081
